@@ -1,6 +1,6 @@
 package br.com.microsservices_java.pagamentos.service;
 
-import br.com.microsservices_java.pagamentos.dto.PagamentoDTO;
+import br.com.microsservices_java.pagamentos.dto.PagamentoDto;
 import br.com.microsservices_java.pagamentos.model.Pagamento;
 import br.com.microsservices_java.pagamentos.model.Status;
 import br.com.microsservices_java.pagamentos.repository.PagamentoRepository;
@@ -20,32 +20,32 @@ public class PagamentoService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Page<PagamentoDTO> obterTodos(Pageable paginacao) {
+    public Page<PagamentoDto> obterTodos(Pageable paginacao) {
         return pagamentoRepository
                 .findAll(paginacao)
-                .map(p -> modelMapper.map(p, PagamentoDTO.class));
+                .map(p -> modelMapper.map(p, PagamentoDto.class));
     }
 
-    public PagamentoDTO obterPorId(Long id) {
+    public PagamentoDto obterPorId(Long id) {
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException());
 
-        return modelMapper.map(pagamento, PagamentoDTO.class);
+        return modelMapper.map(pagamento, PagamentoDto.class);
     }
 
-    public PagamentoDTO criarPagamento(PagamentoDTO dto) {
+    public PagamentoDto criarPagamento(PagamentoDto dto) {
         Pagamento pagamento = modelMapper.map(dto, Pagamento.class);
         pagamento.setStatus(Status.CRIADO);
         pagamentoRepository.save(pagamento);
 
-        return modelMapper.map(pagamento, PagamentoDTO.class);
+        return modelMapper.map(pagamento, PagamentoDto.class);
     }
 
-    public PagamentoDTO atualizarPagamento(Long id, PagamentoDTO dto) {
+    public PagamentoDto atualizarPagamento(Long id, PagamentoDto dto) {
         Pagamento pagamento = modelMapper.map(dto, Pagamento.class);
         pagamento.setId(id);
         pagamento = pagamentoRepository.save(pagamento);
-        return modelMapper.map(pagamento, PagamentoDTO.class);
+        return modelMapper.map(pagamento, PagamentoDto.class);
     }
 
     public void excluirPagamento(Long id) {

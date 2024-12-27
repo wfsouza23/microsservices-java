@@ -1,6 +1,6 @@
 package br.com.microsservices_java.pagamentos.controller;
 
-import br.com.microsservices_java.pagamentos.dto.PagamentoDTO;
+import br.com.microsservices_java.pagamentos.dto.PagamentoDto;
 import br.com.microsservices_java.pagamentos.service.PagamentoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -19,36 +19,39 @@ import java.net.URI;
 public class PagamentoController {
 
     @Autowired
-    private PagamentoService pagamentoService;
+    private PagamentoService service;
 
     @GetMapping
-    public Page<PagamentoDTO> listar(@PageableDefault(size = 10) Pageable paginacao) {
-        return pagamentoService.obterTodos(paginacao);
+    public Page<PagamentoDto> listar(@PageableDefault(size = 10) Pageable paginacao) {
+        return service.obterTodos(paginacao);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> detalhar(@PathVariable @NotNull Long id) {
-        PagamentoDTO dto = pagamentoService.obterPorId(id);
+    public ResponseEntity<PagamentoDto> detalhar(@PathVariable @NotNull Long id) {
+        PagamentoDto dto = service.obterPorId(id);
+
         return ResponseEntity.ok(dto);
     }
 
+
     @PostMapping
-    public ResponseEntity<PagamentoDTO> cadastrar(@RequestBody @Valid PagamentoDTO dto, UriComponentsBuilder uriBuilder) {
-        PagamentoDTO pagamento = pagamentoService.criarPagamento(dto);
+    public ResponseEntity<PagamentoDto> cadastrar(@RequestBody @Valid PagamentoDto dto, UriComponentsBuilder uriBuilder) {
+        PagamentoDto pagamento = service.criarPagamento(dto);
         URI endereco = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamento.getId()).toUri();
 
         return ResponseEntity.created(endereco).body(pagamento);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> atualizar(@PathVariable @NotNull Long id, @RequestBody @Valid PagamentoDTO dto) {
-        PagamentoDTO atualizado = pagamentoService.atualizarPagamento(id, dto);
+    public ResponseEntity<PagamentoDto> atualizar(@PathVariable @NotNull Long id, @RequestBody @Valid PagamentoDto dto) {
+        PagamentoDto atualizado = service.atualizarPagamento(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> remover(@PathVariable @NotNull Long id) {
-        pagamentoService.excluirPagamento(id);
+    public ResponseEntity<PagamentoDto> remover(@PathVariable @NotNull Long id) {
+        service.excluirPagamento(id);
         return ResponseEntity.noContent().build();
     }
+
 }
